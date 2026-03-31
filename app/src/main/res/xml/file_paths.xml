@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- App-private internal storage for receipt images (never in gallery) -->
+    <files-path name="receipts" path="receipts/" />
+    <!-- External cache for temp files -->
+    <external-cache-path name="my_images" path="." />
+    <external-files-path name="my_downloads" path="Download" />
+</paths>

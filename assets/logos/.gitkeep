@@ -1,0 +1,3 @@
+# Store logos directory
+# Add PNG logos for known stores here
+# Filename should match the mapping in utils/store_logos.py

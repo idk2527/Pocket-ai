@@ -1,0 +1,50 @@
+# Android
+*.iml
+.gradle/
+/local.properties
+/.idea/
+/build/
+/app/build/
+/captures
+.externalNativeBuild/
+.cxx/
+*.hprof
+
+# Signing
+keystore.jks
+*.keystore
+*.jks
+
+# Model files (downloaded at runtime via ModelDownloadManager)
+*.gguf
+
+# OTA releases & hosted models
+ota/public/releases/*.bin
+ota/public/models/*.gguf
+
+# Native build artifacts
+app/src/main/cpp/llama.cpp/.build/
+
+# IDE
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Massive files / auto-gen
+*.bak
+*.jar
+*.so.sym
+*.apk
+*.bin
+*mul_mm*
+*.pdb
+.antigravityignore
+
+# Misc
+split_gemma.ps1
+*.log
+*.txt
+opencl_tmp/
+hello.cpp
+test_host.cpp

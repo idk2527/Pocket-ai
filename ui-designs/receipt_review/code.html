@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Review Receipt</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111a22", 
+                        "surface-dark": "#192633",
+                        "border-dark": "#324d67",
+                        "text-secondary": "#92adc9"
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }.status-ring {
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2), 0 0 0 4px rgba(34, 197, 94, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col overflow-x-hidden transition-colors duration-200 selection:bg-primary/30 selection:text-primary pb-32">
+<div class="sticky top-0 z-50 bg-background-light dark:bg-background-dark/95 backdrop-blur-sm border-b border-transparent p-4 pb-2 flex items-center justify-between">
+<button class="text-gray-900 dark:text-white flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-white/5 transition">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+<h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Review Receipt</h2>
+<button class="flex h-12 items-center justify-end px-2 group">
+<p class="text-text-secondary text-base font-bold leading-normal tracking-[0.015em] shrink-0 group-hover:text-primary transition-colors">Cancel</p>
+</button>
+</div>
+<main class="flex-1 flex flex-col p-4 gap-8 max-w-md mx-auto w-full">
+<div class="flex flex-col items-center justify-center pt-4 pb-2">
+<div class="relative mb-3">
+<div class="size-16 rounded-full bg-gray-100 dark:bg-surface-dark flex items-center justify-center text-primary shrink-0 ring-2 ring-green-500 ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark shadow-[0_0_15px_-3px_rgba(34,197,94,0.4)]">
+<span class="material-symbols-outlined text-[32px]">storefront</span>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-green-500 text-white rounded-full p-1 border-2 border-background-light dark:border-background-dark">
+<span class="material-symbols-outlined text-[12px] font-bold block">check</span>
+</div>
+</div>
+<input class="text-center bg-transparent border-none p-0 text-2xl font-extrabold text-gray-900 dark:text-white placeholder-gray-400 focus:ring-0 w-full" type="text" value="Starbucks Coffee"/>
+<p class="text-sm text-green-600 dark:text-green-400 font-semibold mt-1">High Confidence</p>
+</div>
+<div class="flex flex-col gap-0">
+<div class="group flex items-center justify-between py-4 border-b border-gray-100 dark:border-border-dark/30">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-gray-50 dark:bg-surface-dark flex items-center justify-center text-text-secondary">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span>
+</div>
+<label class="text-sm font-semibold text-text-secondary">Date</label>
+</div>
+<input class="bg-transparent border-none p-0 text-base font-bold text-gray-900 dark:text-white text-right focus:ring-0 w-40" type="text" value="Oct 24, 2023"/>
+</div>
+<div class="group flex items-center justify-between py-4 border-b border-gray-100 dark:border-border-dark/30">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-gray-50 dark:bg-surface-dark flex items-center justify-center text-text-secondary">
+<span class="material-symbols-outlined text-[20px]">label</span>
+</div>
+<label class="text-sm font-semibold text-text-secondary">Category</label>
+</div>
+<input class="bg-transparent border-none p-0 text-base font-bold text-gray-900 dark:text-white text-right focus:ring-0 w-40" type="text" value="Food &amp; Drink"/>
+</div>
+</div>
+<div class="flex flex-col gap-4 mt-2">
+<div class="flex items-center justify-between px-1">
+<span class="text-sm font-bold text-gray-900 dark:text-white tracking-wide">Line Items</span>
+<button class="text-primary text-sm font-bold hover:opacity-80 transition-opacity flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">add</span> Add
+                </button>
+</div>
+<div class="flex flex-col gap-2">
+<div class="group relative flex items-center gap-4 py-1">
+<button class="text-text-secondary hover:text-red-500 transition-colors p-1 -ml-2">
+<span class="material-symbols-outlined text-[20px]">remove_circle_outline</span>
+</button>
+<div class="flex-1 relative border-b border-gray-100 dark:border-border-dark/30 pb-3 group-last:border-none">
+<div class="flex justify-between items-start w-full gap-4">
+<input class="bg-transparent p-0 text-base font-medium text-gray-900 dark:text-white border-none focus:ring-0 w-full placeholder:text-text-secondary" type="text" value="Caffe Latte Grande"/>
+<input class="bg-transparent p-0 text-base font-medium text-gray-900 dark:text-white text-right border-none focus:ring-0 w-20 placeholder:text-text-secondary" type="text" value="$4.50"/>
+</div>
+</div>
+</div>
+<div class="group relative flex items-center gap-4 py-1">
+<button class="text-text-secondary hover:text-red-500 transition-colors p-1 -ml-2">
+<span class="material-symbols-outlined text-[20px]">remove_circle_outline</span>
+</button>
+<div class="flex-1 relative border-b border-gray-100 dark:border-border-dark/30 pb-3 group-last:border-none">
+<div class="flex justify-between items-start w-full gap-4">
+<input class="bg-transparent p-0 text-base font-medium text-gray-900 dark:text-white border-none focus:ring-0 w-full placeholder:text-text-secondary" type="text" value="Butter Croissant"/>
+<input class="bg-transparent p-0 text-base font-medium text-gray-900 dark:text-white text-right border-none focus:ring-0 w-20 placeholder:text-text-secondary" type="text" value="$3.25"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-surface-dark/50 rounded-2xl p-6 mt-2">
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center text-sm px-1">
+<span class="text-text-secondary font-medium">Subtotal</span>
+<span class="text-gray-900 dark:text-white font-semibold tracking-wide">$7.75</span>
+</div>
+<div class="flex justify-between items-center text-sm px-1">
+<span class="text-text-secondary font-medium">Tax (8%)</span>
+<span class="text-gray-900 dark:text-white font-semibold tracking-wide">$0.62</span>
+</div>
+<div class="h-px bg-gray-200 dark:bg-border-dark my-2"></div>
+<div class="flex justify-between items-center">
+<span class="text-lg font-bold text-gray-900 dark:text-white">Total</span>
+<span class="text-3xl font-extrabold text-primary tracking-tight">$8.37</span>
+</div>
+</div>
+</div>
+<p class="text-center text-xs text-text-secondary flex items-center justify-center gap-1.5 opacity-60 mt-4 mb-20">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+            Private • Processed locally on device
+        </p>
+</main>
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-xl p-4 pt-4 border-t border-transparent">
+<div class="max-w-md mx-auto flex flex-col gap-3 w-full">
+<button class="w-full h-14 rounded-2xl bg-primary text-white font-bold text-lg shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[24px]">check</span>
+                Save Receipt
+            </button>
+<div class="flex items-center gap-3 mt-1">
+<button class="flex-1 py-3 text-text-secondary font-semibold text-sm hover:text-gray-900 dark:hover:text-white transition-colors">
+                    Edit Manually
+                </button>
+<button aria-label="Delete Receipt" class="py-3 text-red-500 font-semibold text-sm hover:text-red-400 transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+                    Delete
+                </button>
+</div>
+</div>
+<div class="h-6 w-full"></div>
+</div>
+
+</body></html>

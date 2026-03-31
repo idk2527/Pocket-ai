@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Scan Receipt Camera - Pocket AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3b82f6", 
+                        "primary-glow": "#60a5fa",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'glow': '0 0 15px rgba(59, 130, 246, 0.6)',
+                        'inner-glow': 'inset 0 0 10px rgba(255, 255, 255, 0.15)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .camera-overlay-shadow {
+            box-shadow: 0 0 0 100vmax rgba(5, 5, 5, 0.85);
+        }
+        .scan-line {
+            background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.5), transparent);
+            animation: scan 2.5s ease-in-out infinite;
+        }
+        @keyframes scan {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(400px); opacity: 0; }
+        }
+    </style>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black font-display text-white overflow-hidden h-screen w-full relative">
+<div class="absolute inset-0 z-0">
+<img alt="Blurry view of a receipt on a wooden table" class="w-full h-full object-cover opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR9t-o7ixqvoU_VNqEqu0Y2hOKQJZeKsY8UmQbImHXM9ZXC3P1AiukB1c9oFbxOkgefVFMSuep9u4Emr1BhvuesjF45iVi1bGqMqUgeMmfbe9EHx_H48DOjcNteb7vazMKpd6HoGb7glrptYWpSeJzIDHc3qsRggJF5O_eMUfCx-97Zoa2L4EoMG6hZvJq69QK3tYi0gLdE7Fd4lP38dJ_Wv2O8_EBtcOS_9wwWgFFqQNl6rGoseLLJ1nPFNC2e7YaNq18hn7T17g"/>
+</div>
+<div class="relative z-10 flex flex-col h-full w-full justify-between">
+<div class="flex items-center justify-between px-6 pt-14 pb-4 bg-gradient-to-b from-black/60 to-transparent">
+<button class="flex items-center justify-center rounded-full size-11 bg-white/10 backdrop-blur-xl border border-white/10 text-white hover:bg-white/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<div class="px-4 py-1.5 rounded-full bg-black/30 backdrop-blur-md border border-white/5 shadow-lg">
+<span class="text-white/90 font-medium text-sm tracking-wide">Scan Receipt</span>
+</div>
+<button class="flex items-center justify-center rounded-full size-11 bg-white/10 backdrop-blur-xl border border-white/10 text-white hover:bg-white/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">flash_off</span>
+</button>
+</div>
+<div class="flex-1 flex items-center justify-center relative w-full px-8">
+<div class="relative w-full aspect-[3/4] max-w-sm rounded-[2rem] camera-overlay-shadow ring-1 ring-white/10 shadow-inner-glow overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-20 scan-line z-0 pointer-events-none"></div>
+<div class="absolute top-3 left-3 size-8 border-t-[3px] border-l-[3px] border-primary rounded-tl-xl shadow-[0_0_10px_rgba(59,130,246,0.5)] z-10"></div>
+<div class="absolute top-3 right-3 size-8 border-t-[3px] border-r-[3px] border-primary rounded-tr-xl shadow-[0_0_10px_rgba(59,130,246,0.5)] z-10"></div>
+<div class="absolute bottom-3 left-3 size-8 border-b-[3px] border-l-[3px] border-primary rounded-bl-xl shadow-[0_0_10px_rgba(59,130,246,0.5)] z-10"></div>
+<div class="absolute bottom-3 right-3 size-8 border-b-[3px] border-r-[3px] border-primary rounded-br-xl shadow-[0_0_10px_rgba(59,130,246,0.5)] z-10"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40">
+<span class="material-symbols-outlined text-3xl text-white drop-shadow-md">add</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-center justify-end pb-10 pt-8 bg-gradient-to-t from-black via-black/80 to-transparent w-full">
+<h3 class="text-white/90 tracking-wide text-base font-semibold px-4 text-center pb-3 drop-shadow-lg">
+                Align receipt within frame
+            </h3>
+<div class="inline-flex items-center gap-2.5 px-4 py-2.5 mb-8 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
+<span class="material-symbols-outlined text-green-400 text-[18px]" style="font-variation-settings: 'FILL' 1;">shield_lock</span>
+<div class="h-3 w-px bg-white/10"></div>
+<p class="text-gray-200 text-[11px] font-medium tracking-wide uppercase">
+                    On-device only <span class="mx-1 opacity-50">•</span> Private
+                </p>
+</div>
+<div class="flex items-center justify-between w-full px-10 relative">
+<div class="w-16 flex justify-center">
+<button class="group flex flex-col items-center gap-1.5 opacity-80 hover:opacity-100 transition-all active:scale-95">
+<div class="p-2.5 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-white text-[22px]">history</span>
+</div>
+<span class="text-[10px] font-medium text-white/60 group-hover:text-white/90">History</span>
+</button>
+</div>
+<button class="group relative flex items-center justify-center -translate-y-2">
+<div class="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="size-[84px] rounded-full border-[3px] border-white/20 group-active:border-white/40 bg-white/5 backdrop-blur-sm transition-all shadow-lg flex items-center justify-center">
+<div class="size-[68px] rounded-full bg-white shadow-[inset_0_-4px_8px_rgba(0,0,0,0.2),0_4px_10px_rgba(0,0,0,0.3)] group-active:scale-95 transition-transform duration-100 flex items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-tr from-gray-100 via-white to-gray-200"></div>
+<div class="absolute size-14 rounded-full border border-gray-200/50"></div>
+</div>
+</div>
+</button>
+<div class="w-16 flex justify-center">
+<button class="relative size-[46px] rounded-xl overflow-hidden ring-1 ring-white/20 hover:ring-white/50 shadow-lg transition-all active:scale-95">
+<img alt="Last scanned receipt thumbnail" class="w-full h-full object-cover opacity-80" data-alt="Thumbnail of last scanned document" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4nwI7MYPyM5fiMdh_aNFBED9tgZVYD5kQFMX10VxPjv8-dujNA11dhfpidI1xOZkqRbAwFwTW84lVApYnWmt9aKr6-jXJUsxZskJy44pTrsyiu-ZJ0nzDgvySK8lhiVd9fLvhZWO2JXbSYbxyMKEhbsOxnFoxtyn8zLQRDi7nCQR6ceXpoj8jLN7Ew42n6w_7a4nE_re2qrclML2rAs9nrBJHmoo0JwjeiRLlaaoKwLd46_ET_nQReANPiJiD2EoJeIR-vxFiqbc"/>
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/40"></div>
+</button>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>
