@@ -212,10 +212,7 @@ Extract receipt as STRICT JSON. Output ONLY JSON.
 ${prompt}
 <|im_end|>
 <|im_start|>assistant
-<think>
-
-</think>
-
+```json
 """
         } else {
             // For chat and text-only queries, bypass double-wrapping if the ViewModel passes raw ChatML.

@@ -66,34 +66,10 @@ fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val context = LocalContext.current
-    val scannerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val scanResult = GmsDocumentScanningResult.fromActivityResultIntent(result.data)
-            scanResult?.pages?.let { pages ->
-                if (pages.isNotEmpty()) {
-                    val uri = pages[0].imageUri
-                    navController.navigate("add_expense?uri=${Uri.encode(uri.toString())}")
-                }
-            }
-        }
-    }
-
     val onAddClick = {
-        val options = GmsDocumentScannerOptions.Builder()
-            .setGalleryImportAllowed(true)
-            .setPageLimit(1)
-            .setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_JPEG)
-            .setScannerMode(GmsDocumentScannerOptions.SCANNER_MODE_FULL)
-            .build()
-        val scanner = GmsDocumentScanning.getClient(options)
-        val activity = context as? Activity
-        activity?.let { act ->
-            scanner.getStartScanIntent(act).addOnSuccessListener { intentSender ->
-                scannerLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
-            }
+        navController.navigate("add_expense") {
+            popUpTo(navController.graph.startDestinationId)
+            launchSingleTop = true
         }
     }
 

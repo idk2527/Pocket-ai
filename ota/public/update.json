@@ -1,7 +1,7 @@
 {
-  "versionName": "1.3.4",
-  "versionCode": 13,
-  "releaseNotes": "Fixed scanner crash (switched to ML Kit Document Scanner). Added brand logos to expense history. Improved bottom nav spacing.",
-  "apkUrl": "https://pocket-ai-a51d5.web.app/releases/pocketai-v1.3.4.bin",
+  "versionName": "1.4.0",
+  "versionCode": 14,
+  "releaseNotes": "Major Cal AI Redesign! Added Local Omniscient Finance Agent, floating glass interfaces, automated hardware benchmark, and fixed scanner navigation.",
+  "apkUrl": "https://pocket-ai-a51d5.web.app/releases/pocketai-v1.4.0.bin",
   "minSdkVersion": 26
 }
