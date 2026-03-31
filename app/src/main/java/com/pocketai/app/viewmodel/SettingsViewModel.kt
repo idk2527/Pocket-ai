@@ -62,12 +62,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    val useGpu = preferencesManager.useGpu
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    val logoApiKey = preferencesManager.logoApiKey
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
-    fun setUseGpu(enabled: Boolean) {
+    fun setLogoApiKey(key: String) {
         viewModelScope.launch {
-            preferencesManager.setUseGpu(enabled)
+            preferencesManager.setLogoApiKey(key)
         }
     }
 

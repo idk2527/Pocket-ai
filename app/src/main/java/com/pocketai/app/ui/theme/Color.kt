@@ -2,48 +2,33 @@ package com.pocketai.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ─── PocketAI Premium "Liquid Glass" Palette ────────────────────────────────
+// ─── PocketAI Premium "Minimalist Light" Palette (Cal AI Style) ────────────────────────────────
 
-// Backgrounds — softer than pure black for a premium depth
-val Obsidian = Color(0xFF0A0A0A) // True near-black
-val DeepNavy = Color(0xFF0A0A0A) // Legacy name, mapped to new black
-val Charcoal = Color(0xFF141414)
+// Backgrounds — Clean, pure whites and soft slates
+val AppBackground = Color(0xFFF8FAFC) // Very soft off-white slate
+val AppSurface = Color(0xFFFFFFFF)    // Pure white cards
 
-// Surfaces — solid dark cards, no translucent borders
-val GlassDark = Color(0xFF1A1A1E)
-val GlassLight = Color(0xFF242428)
-val GlassBorder = Color.Transparent // Killed the visible border
-val GlassBorderFocus = Color(0x1AFFFFFF) // 10% white only on focus
+// Primary CTA / Core
+val StarkBlack = Color(0xFF0F172A)    // Black CTA buttons (FAB)
+val StarkBlackDim = Color(0xFF334155) // Hover/Pressed state
+val StarkSilver = Color(0xFFE2E8F0)   // Borders/outlines
 
-// Primary — Liquid Teal (main brand accent)
-val LiquidTeal = Color(0xFF14B8A6)
-val LiquidTealGlow = Color(0xFF2DD4BF)
-val LiquidTealDim = Color(0xFF0D9488)
-val LiquidTealBg = Color(0x1A14B8A6) // 10% teal
+// Semantic — Accents
+val SoftGreen = Color(0xFF10B981)     // Positive balances, Income
+val SoftGreenBg = Color(0x1A10B981)   
+val VibrantRed = Color(0xFFF43F5E)    // Expenses, negative
+val VibrantRedBg = Color(0x1AF43F5E)  
+val AlertAmber = Color(0xFFF59E0B)    // Warnings
+val AlertAmberBg = Color(0x1AF59E0B)
 
-// Secondary — Trust Blue
-val TrustBlue = Color(0xFF0EA5E9)
-val TrustBlueDim = Color(0xFF0284C7)
-val TrustBlueBg = Color(0x1A0EA5E9) // 10% blue
+// Brand Blue (Trust) - fallback if needed
+val BrandBlue = Color(0xFF3B82F6)
+val BrandBlueBg = Color(0x1A3B82F6)
 
-// Accent — Softer Mint Green (Success states)
-val NeoGreen = Color(0xFF34D399) // Softer, more Apple-like
-val NeoGreenDim = Color(0xFF10B981)
-val NeoGreenBg = Color(0x1A34D399)
-
-// Semantic — Status/Error
-val CoralRed = Color(0xFFFF6B6B)
-val CoralRedDim = Color(0xFFEF4444)
-val CoralRedBg = Color(0x1AFF6B6B)
-
-val AmberWarn = Color(0xFFFBBF24)
-val AmberWarnBg = Color(0x1AFBBF24)
-
-// Text
-val TextPrimary = Color(0xFFF9FAFB) // 98% white
-val TextSecondary = Color(0xFF9CA3AF) // Muted gray
-val TextTertiary = Color(0xFF6B7280) // Hint text
-val TextInverse = Color(0xFF0A0F1C) // For light surfaces / buttons
+// Typography
+val TextPrimary = Color(0xFF0F172A)   // Near black for amazing contrast
+val TextSecondary = Color(0xFF64748B) // Slate 500 for subtler dates/labels
+val TextInverse = Color(0xFFFFFFFF)   // White text on dark FABs
 
 // Light Theme
 val LightBackground = Color(0xFFF8FAFC)

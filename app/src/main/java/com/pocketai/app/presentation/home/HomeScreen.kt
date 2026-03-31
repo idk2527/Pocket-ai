@@ -175,22 +175,24 @@ fun HomeHeader(navController: NavController, userName: String) {
             Box(
                 modifier = Modifier
                     .size(56.dp)
+                    .shadow(12.dp, CircleShape, spotColor = Color.Black.copy(alpha = 0.08f))
                     .clip(CircleShape)
                     .background(
                         Brush.linearGradient(
                             colors = listOf(
-                                MaterialTheme.colorScheme.primary,
-                                MaterialTheme.colorScheme.secondary
+                                MaterialTheme.colorScheme.primaryContainer,
+                                MaterialTheme.colorScheme.surface
                             )
                         )
                     )
+                    .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
                     .clickable { navController.navigate("settings") },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = userName.take(1).uppercase(),
                     style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
             
@@ -204,7 +206,8 @@ fun HomeHeader(navController: NavController, userName: String) {
                 )
                 Text(
                     text = userName,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -212,9 +215,9 @@ fun HomeHeader(navController: NavController, userName: String) {
         Box(
             modifier = Modifier
                 .size(48.dp)
+                .shadow(8.dp, CircleShape, spotColor = Color.Black.copy(alpha = 0.05f))
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-                .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
+                .background(MaterialTheme.colorScheme.surface)
                 .clickable { navController.navigate("settings") },
             contentAlignment = Alignment.Center
         ) {
@@ -270,7 +273,7 @@ fun MonthlySpendCard(totalSpending: Double, percentChange: Double, budget: Float
                     .fillMaxWidth()
                     .height(6.dp)
                     .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.3f))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Box(
                     modifier = Modifier
@@ -452,8 +455,9 @@ fun HighlightCard(
 ) {
     Box(
         modifier = modifier
+            .shadow(16.dp, RoundedCornerShape(20.dp), spotColor = Color.Black.copy(alpha = 0.04f))
             .clip(RoundedCornerShape(20.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant) // Solid card, no border
+            .background(MaterialTheme.colorScheme.surface) // White floating card
             .padding(20.dp)
     ) {
         Column {

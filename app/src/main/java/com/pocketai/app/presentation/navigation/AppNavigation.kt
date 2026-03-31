@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.pocketai.app.presentation.add.AddExpenseScreen
 import com.pocketai.app.presentation.analytics.AnalyticsScreen
+import com.pocketai.app.presentation.chat.ChatScreen
 import com.pocketai.app.presentation.home.HomeScreen
 import com.pocketai.app.presentation.detail.ExpenseDetailScreen
 import com.pocketai.app.presentation.receipts.ReceiptsScreen
@@ -127,6 +128,10 @@ fun AppNavigation(
                     if (expenseId != null) {
                         ExpenseDetailScreen(navController = navController, expenseId = expenseId)
                     }
+                }
+
+                composable(Screen.Chat.route) {
+                    ChatScreen()
                 }
 
                 composable(Screen.Settings.route) {

@@ -15,67 +15,39 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-// "Liquid Glass" Premium Dark Theme
-private val DarkColorScheme = darkColorScheme(
-    primary = LiquidTeal,
-    onPrimary = Obsidian, // Dark text on bright accent for contrast
-    primaryContainer = LiquidTealBg,
-    onPrimaryContainer = LiquidTealGlow,
-    secondary = TrustBlue,
-    onSecondary = TextPrimary,
-    secondaryContainer = TrustBlueBg,
-    onSecondaryContainer = TrustBlueDim,
-    tertiary = NeoGreen,
-    onTertiary = Obsidian,
-    background = DeepNavy,
-    onBackground = TextPrimary,
-    surface = DeepNavy, // Base surface matches background
-    onSurface = TextPrimary,
-    surfaceVariant = GlassDark, // Elevated cards
-    onSurfaceVariant = TextSecondary,
-    error = CoralRed,
-    onError = TextPrimary,
-    errorContainer = CoralRedBg,
-    onErrorContainer = CoralRedDim,
-    outline = GlassBorder
-)
-
-// We are forcing a Dark-First aesthetic for that premium AI "vibe".
-// But we still map light colors thoughtfully if the user explicitly disables dark mode later.
+// "Cal AI" Minimalist Light Theme
 private val LightColorScheme = lightColorScheme(
-    primary = TrustBlue,
-    onPrimary = TextPrimary,
-    primaryContainer = TrustBlueBg,
-    onPrimaryContainer = TrustBlueDim,
-    secondary = LiquidTealDim,
-    onSecondary = TextPrimary,
-    tertiary = NeoGreenDim,
-    onTertiary = TextPrimary,
-    background = LightBackground,
-    onBackground = LightTextPrimary,
-    surface = LightSurface,
-    onSurface = LightTextPrimary,
-    surfaceVariant = LightSurfaceVariant,
-    onSurfaceVariant = LightTextSecondary,
-    error = CoralRedDim,
-    onError = TextPrimary,
-    outline = LightBorder
+    primary = StarkBlack, // Core CTA buttons
+    onPrimary = TextInverse,
+    primaryContainer = StarkSilver,
+    onPrimaryContainer = StarkBlack,
+    secondary = BrandBlue,
+    onSecondary = TextInverse,
+    secondaryContainer = BrandBlueBg,
+    onSecondaryContainer = BrandBlue,
+    tertiary = SoftGreen,
+    onTertiary = TextInverse,
+    background = AppBackground,
+    onBackground = TextPrimary,
+    surface = AppSurface,
+    onSurface = TextPrimary,
+    surfaceVariant = AppSurface, // Keep variant equal to surface for flatness
+    onSurfaceVariant = TextSecondary,
+    error = VibrantRed,
+    onError = TextInverse,
+    errorContainer = VibrantRedBg,
+    onErrorContainer = VibrantRed,
+    outline = StarkSilver
 )
 
 @Composable
 fun PocketAITheme(
-    darkTheme: Boolean = true, // Force dark theme by default for premium feel
-    dynamicColor: Boolean = false, // Disabled to enforce brand consistency
+    darkTheme: Boolean = false, // Enforce light theme for the pure minimalist look
+    dynamicColor: Boolean = false, 
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    // Force light scheme unconditionally for visual uniformity
+    val colorScheme = LightColorScheme
     
     val view = LocalView.current
     if (!view.isInEditMode) {

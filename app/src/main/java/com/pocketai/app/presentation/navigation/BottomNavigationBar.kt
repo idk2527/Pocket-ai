@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
@@ -58,7 +59,7 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem("Home", Icons.Default.Home, Screen.Dashboard.route),
         BottomNavItem("Analytics", Icons.Default.BarChart, Screen.Analytics.route),
         BottomNavItem("Add", Icons.Default.Add, Screen.Scanner.route),
-        BottomNavItem("History", Icons.Default.DateRange, Screen.Receipts.route),
+        BottomNavItem("Chat", Icons.Default.ChatBubble, Screen.Chat.route),
         BottomNavItem("Settings", Icons.Default.Settings, Screen.Settings.route)
     )
 
@@ -111,11 +112,11 @@ fun BottomNavigationBar(navController: NavController) {
                 .shadow(
                     elevation = 24.dp,
                     shape = RoundedCornerShape(32.dp),
-                    ambientColor = Color.Black.copy(alpha = 0.8f),
-                    spotColor = Color.Black.copy(alpha = 0.8f)
+                    ambientColor = Color.Black.copy(alpha = 0.05f),
+                    spotColor = Color.Black.copy(alpha = 0.02f)
                 )
                 .clip(RoundedCornerShape(32.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             Row(
                 modifier = Modifier
@@ -178,13 +179,13 @@ fun BottomNavigationBar(navController: NavController) {
                 .offset(y = (-20).dp)
                 .size(64.dp)
                 .shadow(
-                    elevation = 8.dp,
+                    elevation = 16.dp,
                     shape = CircleShape,
-                    ambientColor = Color.Black.copy(alpha = 0.3f),
-                    spotColor = Color.Black.copy(alpha = 0.1f)
+                    ambientColor = Color.Black.copy(alpha = 0.1f),
+                    spotColor = Color.Black.copy(alpha = 0.05f)
                 )
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.tertiary)
+                .background(MaterialTheme.colorScheme.primary)
                 .clickable {
                     onAddClick()
                 },
@@ -193,7 +194,7 @@ fun BottomNavigationBar(navController: NavController) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Scan Receipt",
-                tint = MaterialTheme.colorScheme.onTertiary,
+                tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(32.dp)
             )
         }

@@ -30,7 +30,7 @@ class PreferencesManager @Inject constructor(
         private val USER_NAME = stringPreferencesKey("user_name")
         private val MONTHLY_BUDGET = floatPreferencesKey("monthly_budget")
         private val THEME_MODE = stringPreferencesKey("theme_mode") // "light", "dark", "auto"
-        private val USE_GPU = booleanPreferencesKey("use_gpu")
+        private val LOGO_API_KEY = stringPreferencesKey("logo_api_key")
     }
     
     val isOnboardingCompleted: Flow<Boolean> = dataStore.data.map { preferences ->
@@ -65,11 +65,11 @@ class PreferencesManager @Inject constructor(
         dataStore.edit { it[THEME_MODE] = mode }
     }
     
-    val useGpu: Flow<Boolean> = dataStore.data.map { preferences ->
-        preferences[USE_GPU] ?: false
+    val logoApiKey: Flow<String> = dataStore.data.map { preferences ->
+        preferences[LOGO_API_KEY] ?: ""
     }
     
-    suspend fun setUseGpu(enabled: Boolean) {
-        dataStore.edit { it[USE_GPU] = enabled }
+    suspend fun setLogoApiKey(key: String) {
+        dataStore.edit { it[LOGO_API_KEY] = key }
     }
 }

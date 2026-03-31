@@ -1,6 +1,7 @@
 package com.pocketai.app.presentation.onboarding
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,14 +11,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -29,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pocketai.app.R
-import com.pocketai.app.presentation.components.GlassCard
+import com.pocketai.app.viewmodel.BenchmarkState
 import com.pocketai.app.viewmodel.OnboardingViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -41,6 +43,16 @@ fun OnboardingScreen(
     var step by remember { mutableIntStateOf(0) }
     var name by remember { mutableStateOf("") }
     var budget by remember { mutableStateOf("2000") }
+    
+    val benchmarkState by viewModel.benchmarkState.collectAsState()
+    val benchmarkResult by viewModel.benchmarkResult.collectAsState()
+
+    // Trigger benchmarking when reaching step 1
+    LaunchedEffect(step) {
+        if (step == 1 && benchmarkState == BenchmarkState.IDLE) {
+            viewModel.runHardwareBenchmark()
+        }
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -52,6 +64,8 @@ fun OnboardingScreen(
                     .navigationBarsPadding(),
                 contentAlignment = Alignment.Center
             ) {
+                val isButtonEnabled = !(step == 1 && benchmarkState != BenchmarkState.COMPLETED)
+                
                 Button(
                     onClick = {
                         if (step < 2) {
@@ -68,40 +82,26 @@ fun OnboardingScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(64.dp),
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(32.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = MaterialTheme.colorScheme.outlineVariant,
+                        disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 8.dp,
-                        pressedElevation = 2.dp
-                    )
+                    enabled = isButtonEnabled
                 ) {
                     AnimatedContent(
                         targetState = step,
                         transitionSpec = {
-                            if (targetState > initialState) {
-                                slideInVertically { height -> height } + fadeIn() with
-                                slideOutVertically { height -> -height } + fadeOut()
-                            } else {
-                                slideInVertically { height -> -height } + fadeIn() with
-                                slideOutVertically { height -> height } + fadeOut()
-                            }.using(SizeTransform(clip = false))
+                            fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
                         },
-                        label = "button_text"
+                        label = "button_anim"
                     ) { targetStep ->
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = if (targetStep < 2) "Continue" else "Get Started",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            if (targetStep < 2) {
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(20.dp))
-                            }
-                        }
+                        Text(
+                            text = if (targetStep < 2) "Continue" else "Get Started",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
+                        )
                     }
                 }
             }
@@ -112,85 +112,24 @@ fun OnboardingScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Ambient Top Glow
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .background(
-                        Brush.radialGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f),
-                                Color.Transparent
-                            ),
-                            radius = 600f
-                        )
+            AnimatedContent(
+                targetState = step,
+                transitionSpec = {
+                    slideInHorizontally(
+                        initialOffsetX = { fullWidth -> fullWidth },
+                        animationSpec = tween(400, easing = FastOutSlowInEasing)
+                    ) togetherWith slideOutHorizontally(
+                        targetOffsetX = { fullWidth -> -fullWidth },
+                        animationSpec = tween(400, easing = FastOutSlowInEasing)
                     )
-            )
-
-            // Dynamic Step Indicators
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 48.dp, start = 24.dp, end = 24.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                repeat(3) { index ->
-                    val isSelected = step == index
-                    val isPast = step > index
-                    val color = if (isSelected || isPast) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
-                    val width = if (isSelected) 32.dp else 8.dp
-                    
-                    androidx.compose.animation.core.animateDpAsState(targetValue = width).value.let { w ->
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 4.dp)
-                                .height(8.dp)
-                                .width(w)
-                                .clip(CircleShape)
-                                .background(color)
-                        )
-                    }
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 32.dp)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                AnimatedContent(
-                    targetState = step,
-                    transitionSpec = {
-                        if (targetState > initialState) {
-                            slideInHorizontally { width -> width } + fadeIn() with
-                            slideOutHorizontally { width -> -width } + fadeOut()
-                        } else {
-                            slideInHorizontally { width -> -width } + fadeIn() with
-                            slideOutHorizontally { width -> width } + fadeOut()
-                        }.using(SizeTransform(clip = false))
-                    },
-                    label = "Onboarding"
-                ) { currentStep ->
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        when (currentStep) {
-                            0 -> WelcomeStep()
-                            1 -> ProfileStep(
-                                name = name, 
-                                onNameChange = { name = it },
-                                budget = budget,
-                                onBudgetChange = { budget = it }
-                            )
-                            2 -> PrivacyStep()
-                        }
-                    }
+                },
+                modifier = Modifier.fillMaxSize(),
+                label = "step_anim"
+            ) { targetStep ->
+                when (targetStep) {
+                    0 -> WelcomeStep()
+                    1 -> BenchmarkStep(benchmarkState, benchmarkResult?.estimatedSeconds)
+                    2 -> PreferencesStep(name, { name = it }, budget, { budget = it })
                 }
             }
         }
@@ -198,167 +137,229 @@ fun OnboardingScreen(
 }
 
 @Composable
-fun WelcomeStep() {
-    Box(
+private fun WelcomeStep() {
+    Column(
         modifier = Modifier
-            .size(160.dp)
-            .clip(CircleShape)
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.secondary
-                    )
-                )
-            ),
-        contentAlignment = Alignment.Center
+            .fillMaxSize()
+            .padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            Icons.Default.AutoAwesome,
-            contentDescription = "AI Magic",
-            tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.size(80.dp)
+        // App Icon Layered Look
+        Box(
+            modifier = Modifier
+                .size(120.dp)
+                .shadow(24.dp, shape = RoundedCornerShape(32.dp), spotColor = Color.Black.copy(alpha = 0.15f))
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(32.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "App Logo",
+                modifier = Modifier.size(72.dp)
+            )
+        }
+        
+        Spacer(modifier = Modifier.height(48.dp))
+        
+        Text(
+            text = "Welcome to",
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = "PocketAI",
+            style = MaterialTheme.typography.displaySmall.copy(
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = (-1).sp
+            ),
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        Text(
+            text = "Scan receipts automatically. Track your money privately. Chat with a local AI.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            lineHeight = 24.sp
         )
     }
-    
-    Spacer(modifier = Modifier.height(64.dp))
-    
-    Text(
-        text = "PocketAI Pro",
-        style = MaterialTheme.typography.displayMedium,
-        textAlign = TextAlign.Center
-    )
-    
-    Spacer(modifier = Modifier.height(16.dp))
-    
-    Text(
-        text = "The ultimate AI-powered\nfinancial assistant. Designed for elegance.",
-        textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-    )
 }
 
 @Composable
-fun ProfileStep(
+private fun BenchmarkStep(state: BenchmarkState, estimatedSec: Float?) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        
+        val progressRotation by rememberInfiniteTransition(label = "").animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(animation = tween(1500, easing = LinearEasing)),
+            label = ""
+        )
+
+        Box(
+            modifier = Modifier.size(140.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            if (state != BenchmarkState.COMPLETED) {
+                CircularProgressIndicator(
+                    modifier = Modifier.fillMaxSize(),
+                    strokeWidth = 6.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = null,
+                    modifier = Modifier.size(80.dp),
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(48.dp))
+        
+        Text(
+            text = if (state == BenchmarkState.COMPLETED) "Hardware Verified" else "Testing AI Capability",
+            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        if (state == BenchmarkState.COMPLETED && estimatedSec != null) {
+            val formattedTime = String.format("%.1f", estimatedSec)
+            val isBeast = estimatedSec <= 30f
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(16.dp, RoundedCornerShape(24.dp), spotColor = Color.Black.copy(alpha = 0.05f))
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(24.dp))
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "ESTIMATED RECEIPT SCAN TIME",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    letterSpacing = 1.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.Bottom) {
+                    Text(
+                        text = formattedTime,
+                        style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold),
+                        color = if(isBeast) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onBackground
+                    )
+                    Text(
+                        text = "s",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Text(
+                    text = if(isBeast) "Your phone is a beast! You're ready for lightning-fast local AI." 
+                           else "Ready to go. Speeds may vary based on exact receipt length.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
+            Text(
+                text = "We're running a quick mathematical benchmark on your CPU to estimate local LLM performance...",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+private fun PreferencesStep(
     name: String,
     onNameChange: (String) -> Unit,
     budget: String,
     onBudgetChange: (String) -> Unit
 ) {
-    Box(
+    Column(
         modifier = Modifier
-            .size(120.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceVariant),
-        contentAlignment = Alignment.Center
+            .fillMaxSize()
+            .padding(horizontal = 32.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            Icons.Default.PersonOutline,
-            contentDescription = null,
-            modifier = Modifier.size(60.dp),
-            tint = MaterialTheme.colorScheme.primary
+        Spacer(modifier = Modifier.height(64.dp))
+        
+        Text(
+            text = "Just a few details",
+            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onBackground
         )
-    }
-
-    Spacer(modifier = Modifier.height(48.dp))
-
-    Text(
-        text = "Let's personalize",
-        style = MaterialTheme.typography.headlineMedium
-    )
-    
-    Spacer(modifier = Modifier.height(40.dp))
-    
-    OutlinedTextField(
-        value = name,
-        onValueChange = onNameChange,
-        label = { Text("How should we call you?") },
-        leadingIcon = { Icon(Icons.Default.Person, null, tint = MaterialTheme.colorScheme.primary) },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
-        ),
-        singleLine = true
-    )
-    
-    Spacer(modifier = Modifier.height(24.dp))
-    
-    OutlinedTextField(
-        value = budget,
-        onValueChange = onBudgetChange,
-        label = { Text("Monthly Goal (€)") },
-        leadingIcon = { Icon(Icons.Default.AccountBalanceWallet, null, tint = MaterialTheme.colorScheme.secondary) },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)
-        ),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        singleLine = true
-    )
-}
-
-@Composable
-fun PrivacyStep() {
-    Icon(
-        Icons.Default.Shield,
-        contentDescription = null,
-        modifier = Modifier.size(100.dp),
-        tint = MaterialTheme.colorScheme.tertiary
-    )
-    
-    Spacer(modifier = Modifier.height(48.dp))
-    
-    Text(
-        text = "Private by Default",
-        style = MaterialTheme.typography.headlineMedium
-    )
-    
-    Spacer(modifier = Modifier.height(16.dp))
-    
-    Text(
-        text = "Your data stays yours.",
-        style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-    )
-
-    Spacer(modifier = Modifier.height(40.dp))
-    
-    GlassCard(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            PrivacyFeatureRow(Icons.Default.NoTransfer, "No Cloud Sync", "Receipts are processed entirely on-device.")
-            Spacer(modifier = Modifier.height(24.dp))
-            PrivacyFeatureRow(Icons.Default.Memory, "Local AI Engine", "The Vision model runs directly on your hardware.")
-            Spacer(modifier = Modifier.height(24.dp))
-            PrivacyFeatureRow(Icons.Default.AccountCircle, "No Account Needed", "Start immediately with zero tracking.")
-        }
-    }
-}
-
-@Composable
-fun PrivacyFeatureRow(icon: ImageVector, title: String, desc: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-        Column {
-            Text(title, style = MaterialTheme.typography.titleMedium)
-            Text(desc, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        Text(
+            text = "Let's personalize your experience.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        
+        Spacer(modifier = Modifier.height(48.dp))
+        
+        // Custom Soft Input Field for Name
+        Text(text = "What should we call you?", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = name,
+            onValueChange = onNameChange,
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
+            placeholder = { Text("Your name") },
+            singleLine = true
+        )
+        
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // Custom Soft Input Field for Budget
+        Text(text = "Monthly budget goal", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = budget,
+            onValueChange = onBudgetChange,
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            placeholder = { Text("e.g. 2000") },
+            singleLine = true,
+            leadingIcon = { Text("$", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+        )
+        
+        Spacer(modifier = Modifier.height(64.dp))
     }
 }

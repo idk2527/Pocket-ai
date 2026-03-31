@@ -23,8 +23,7 @@ import com.pocketai.app.data.preferences.PreferencesManager
  */
 @Singleton
 class LlamaCppService @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val preferencesManager: PreferencesManager
+    @ApplicationContext private val context: Context
 ) {
     private val TAG = "LlamaCppService"
 
@@ -121,7 +120,7 @@ class LlamaCppService @Inject constructor(
                 _status.value = "Image: ${image.width}x${image.height} (${imageBytes.size / 1024}KB)"
             }
 
-            val formattedPrompt = getFormattedPrompt(prompt)
+            val formattedPrompt = getFormattedPrompt(prompt, image != null)
             Log.d(TAG, "Running llama inference with prompt length: ${formattedPrompt.length}")
             
             _status.value = "Running VLM inference..."
@@ -201,8 +200,9 @@ class LlamaCppService @Inject constructor(
     /**
      * Wrap prompt in Qwen3-VL (ChatML) specific template.
      */
-    private fun getFormattedPrompt(prompt: String): String {
-        return """<|im_start|>system
+    private fun getFormattedPrompt(prompt: String, hasImage: Boolean): String {
+        return if (hasImage) {
+            """<|im_start|>system
 You are a highly efficient receipt parser.
 Do NOT use <think> tags. Do NOT explain. Disable all reasoning.
 Extract receipt as STRICT JSON. Output ONLY JSON.
@@ -217,6 +217,18 @@ ${prompt}
 </think>
 
 """
+        } else {
+            // For chat and text-only queries, bypass double-wrapping if the ViewModel passes raw ChatML.
+            if (prompt.startsWith("<|im_start|>")) {
+                prompt
+            } else {
+                """<|im_start|>user
+${prompt}
+<|im_end|>
+<|im_start|>assistant
+"""
+            }
+        }
     }
 
 

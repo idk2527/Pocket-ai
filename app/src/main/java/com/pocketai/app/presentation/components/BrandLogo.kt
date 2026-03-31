@@ -21,8 +21,13 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlin.math.absoluteValue
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import com.pocketai.app.data.preferences.PreferencesManager
+
 /**
- * Displays a store brand logo from the Clearbit Logo API.
+ * Displays a store brand logo from the Clearbit/Logo API.
  * Falls back to a colored initial-avatar when the logo can't be loaded.
  */
 @Composable
@@ -31,12 +36,17 @@ fun BrandLogo(
     modifier: Modifier = Modifier,
     size: Dp = 48.dp
 ) {
+    val context = LocalContext.current
+    val prefManager = remember { PreferencesManager(context) }
+    val userToken by prefManager.logoApiKey.collectAsState(initial = "")
+    val activeToken = userToken.ifEmpty { com.pocketai.app.BuildConfig.LOGO_DEV_TOKEN }
+
     val domain = storeToDomain(storeName)
-    val logoUrl = domain?.let { "https://img.logo.dev/$it?token=${com.pocketai.app.BuildConfig.LOGO_DEV_TOKEN}&size=128&format=png" }
+    val logoUrl = domain?.let { "https://img.logo.dev/$it?token=$activeToken&size=128&format=png" }
     val initial = storeName.firstOrNull()?.uppercaseChar() ?: '?'
     val avatarColor = generateColorFromName(storeName)
 
-    if (logoUrl != null) {
+    if (logoUrl != null && activeToken.isNotEmpty()) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(logoUrl)

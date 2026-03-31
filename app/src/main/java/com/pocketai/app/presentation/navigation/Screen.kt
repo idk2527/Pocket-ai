@@ -27,6 +27,7 @@ sealed class Screen(val route: String) {
     
     object Settings : Screen("settings")
     object Analytics : Screen("analytics")
+    object Chat : Screen("chat")
 
     object DigitalReceipt : Screen("digital_receipt/{expenseId}") {
         const val EXPENSE_ID_ARG = "expenseId"

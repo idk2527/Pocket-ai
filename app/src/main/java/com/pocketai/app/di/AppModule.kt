@@ -33,10 +33,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideLlamaCppService(
-        @ApplicationContext context: Context,
-        preferencesManager: com.pocketai.app.data.preferences.PreferencesManager
+        @ApplicationContext context: Context
     ): LlamaCppService {
-        return LlamaCppService(context, preferencesManager)
+        return LlamaCppService(context)
     }
     
     // ReceiptPipeline is now @Inject constructor, no manual provision needed

@@ -52,7 +52,8 @@ fun SettingsScreen(
     
     val themeMode by viewModel.themeMode.collectAsState()
     var showThemeDialog by remember { mutableStateOf(false) }
-    val useGpu by viewModel.useGpu.collectAsState()
+    val logoApiKey by viewModel.logoApiKey.collectAsState()
+    var showEditApiKeyDialog by remember { mutableStateOf(false) }
 
     val visibleState = remember { 
         androidx.compose.animation.core.MutableTransitionState(false).apply { 
@@ -197,13 +198,12 @@ fun SettingsScreen(
                         onClick = { showThemeDialog = true }
                     )
                     Divider(color = MaterialTheme.colorScheme.outline, modifier = Modifier.padding(start = 64.dp))
-                    SettingsToggleItem(
-                        icon = Icons.Default.FlashOn,
-                        iconColor = Color(0xFFF59E0B), // Amber
-                        title = "GPU Acceleration",
-                        subtitle = "Use Vulkan for faster AI",
-                        checked = useGpu,
-                        onCheckedChange = { viewModel.setUseGpu(it) }
+                    SettingsItem(
+                        icon = Icons.Default.VpnKey,
+                        iconColor = Color(0xFF10B981), // Emerald
+                        title = "Logo.dev API Key",
+                        value = if (logoApiKey.isNotEmpty()) "••••${logoApiKey.takeLast(4)}" else "Not Set",
+                        onClick = { showEditApiKeyDialog = true }
                     )
                     Divider(color = MaterialTheme.colorScheme.outline, modifier = Modifier.padding(start = 64.dp))
                     SettingsItem(
@@ -327,6 +327,42 @@ fun SettingsScreen(
                     },
                     dismissButton = {
                         TextButton(onClick = { showEditBudgetDialog = false }) { Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                    },
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+            }
+            
+            if (showEditApiKeyDialog) {
+                var tempKey by remember { mutableStateOf(logoApiKey) }
+                AlertDialog(
+                    onDismissRequest = { showEditApiKeyDialog = false },
+                    title = { Text("Logo.dev API Key") },
+                    text = {
+                        Column {
+                            Text(
+                                "Enter your free API key from Logo.dev to enable brand icons.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(Modifier.height(12.dp))
+                            OutlinedTextField(
+                                value = tempKey,
+                                onValueChange = { tempKey = it },
+                                placeholder = { Text("pk_...") },
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            viewModel.setLogoApiKey(tempKey)
+                            showEditApiKeyDialog = false
+                        }) { Text("Save", color = MaterialTheme.colorScheme.primary) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showEditApiKeyDialog = false }) { Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant) }
                     },
                     containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )

@@ -30,7 +30,7 @@ fun GlassBox(
         modifier = modifier
             .clip(shape)
             .background(
-                color = MaterialTheme.colorScheme.surfaceVariant
+                color = MaterialTheme.colorScheme.surface // Pure white
             ),
         content = content
     )
@@ -45,13 +45,13 @@ fun GlassCard(
     Box(
         modifier = modifier
             .shadow(
-                elevation = 8.dp, // Softer shadow
+                elevation = 24.dp, // Large diffuse shadow for floating effect
                 shape = shape,
-                ambientColor = Color.Black.copy(alpha = 0.3f),
-                spotColor = Color.Black.copy(alpha = 0.1f)
+                ambientColor = Color.Black.copy(alpha = 0.05f),
+                spotColor = Color.Black.copy(alpha = 0.03f)
             )
             .clip(shape)
-            .background(color = MaterialTheme.colorScheme.surfaceVariant), // Solid, no gradient
+            .background(color = MaterialTheme.colorScheme.surface), // Pure white
         content = content
     )
 }
