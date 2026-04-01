@@ -8,9 +8,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.isSystemInDarkTheme
 import com.pocketai.app.ui.theme.PocketAITheme
 import com.pocketai.app.presentation.navigation.AppNavigation
+import kotlinx.coroutines.launch
 import com.pocketai.app.services.LlamaCppService
 import com.pocketai.app.services.ModelDownloadManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +35,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var modelDownloadManager: ModelDownloadManager
 
+    @Inject
+    lateinit var updateManager: com.pocketai.app.services.UpdateManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,6 +53,18 @@ class MainActivity : ComponentActivity() {
                 "dark" -> true
                 else -> isSystemInDarkTheme()
             }
+            
+            var otaManifest by remember { mutableStateOf<com.pocketai.app.services.OtaManifest?>(null) }
+            val scope = rememberCoroutineScope()
+
+            LaunchedEffect(Unit) {
+                scope.launch {
+                    val update = updateManager.checkForUpdate()
+                    if (update != null) {
+                        otaManifest = update
+                    }
+                }
+            }
 
             PocketAITheme(darkTheme = isDarkTheme) {
                 Surface(
@@ -50,6 +72,32 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     AppNavigation(downloadManager = modelDownloadManager)
+                    
+                    if (otaManifest != null) {
+                        androidx.compose.material3.AlertDialog(
+                            onDismissRequest = { otaManifest = null },
+                            title = { androidx.compose.material3.Text("Update Available: v${otaManifest?.versionName}") },
+                            text = { androidx.compose.material3.Text(otaManifest?.releaseNotes ?: "A new version of PocketAI is available.") },
+                            confirmButton = {
+                                androidx.compose.material3.TextButton(onClick = {
+                                    val manifest = otaManifest
+                                    otaManifest = null
+                                    if (manifest != null) {
+                                        updateManager.downloadAndInstall(manifest.apkUrl, "pocketai-v${manifest.versionName}.apk")
+                                        val toastMsg = "Downloading update in background..."
+                                        android.widget.Toast.makeText(this@MainActivity, toastMsg, android.widget.Toast.LENGTH_LONG).show()
+                                    }
+                                }) {
+                                    androidx.compose.material3.Text("Install Now")
+                                }
+                            },
+                            dismissButton = {
+                                androidx.compose.material3.TextButton(onClick = { otaManifest = null }) {
+                                    androidx.compose.material3.Text("Remind Me Later")
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }

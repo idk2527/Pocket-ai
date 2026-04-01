@@ -170,7 +170,7 @@ class LlamaCppService @Inject constructor(
             ""
         }
         
-        val useGpu = gpuName.isNotEmpty() && !gpuName.contains("Mali", ignoreCase = true)
+        val useGpu = false // gpuName.isNotEmpty() && !gpuName.contains("Mali", ignoreCase = true)
         
         _status.value = "Loading model (GPU=${if (useGpu) "ON" else "OFF"})..."
         Log.i(TAG, "GPU Detection: Built-in GPU reported as '$gpuName'.")
