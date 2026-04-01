@@ -53,18 +53,9 @@ static int64_t now_ms() {
 // Helper to check the Vulkan backend properties without fully initializing llama context
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_pocketai_app_services_LlamaCppService_llamaGetGpuName(JNIEnv *env, jobject thiz) {
-    char description[256];
-    description[0] = '\0'; // ensure null-termination
-    
-#if defined(GGML_USE_VULKAN)
-    // CRITICAL: Call get_device_count first to ensure the Vulkan instance is initialized.
-    // Without this, get_device_description(0) fails an assertion/crashes because the list is empty.
-    if (ggml_backend_vk_get_device_count() > 0) {
-        ggml_backend_vk_get_device_description(0, description, sizeof(description));
-    }
-#endif
-    
-    return env->NewStringUTF(description);
+    // HARD DISABLE VULKAN PROBING
+    // Some drivers crash just by asking for device count.
+    return env->NewStringUTF("");
 }
 
 extern "C" JNIEXPORT jlong JNICALL

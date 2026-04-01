@@ -1,7 +1,7 @@
 {
-  "versionName": "1.4.1",
-  "versionCode": 15,
-  "releaseNotes": "Fixes a fatal crash (SIGABRT) during receipt scanning caused by Vulcan GPU offloading logic. Added automatic background checking for the newest available version of Pocket AI.",
-  "apkUrl": "https://pocket-ai-a51d5.web.app/releases/pocketai-v1.4.1.bin",
+  "versionName": "1.4.2",
+  "versionCode": 16,
+  "releaseNotes": "Emergency Stability Update: Fully disabled Vulkan driver probing and hardware acceleration to resolve persistent SIGABRT crashes on certain devices (e.g., Xiaomi/Adreno).",
+  "apkUrl": "https://pocket-ai-a51d5.web.app/releases/pocketai-v1.4.2.bin",
   "minSdkVersion": 26
 }

@@ -162,19 +162,12 @@ class LlamaCppService @Inject constructor(
         val modelPath = modelFile.absolutePath
         val mmprojPath = mmprojFile.absolutePath
         
-        // 1. Check GPU vendor (Mali GPUs are known to be slow with our Vulkan shaders)
-        val gpuName = try {
-            llamaGetGpuName()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to get GPU name via JNI", e)
-            ""
-        }
+        // 1. HARD DISABLE GPU (Vulkan) to prevent SIGABRT on unstable device drivers.
+        // Even probing with llamaGetGpuName can trigger driver crashes on some MIUI/Adreno devices.
+        val useGpu = false 
         
-        val useGpu = false // gpuName.isNotEmpty() && !gpuName.contains("Mali", ignoreCase = true)
-        
-        _status.value = "Loading model (GPU=${if (useGpu) "ON" else "OFF"})..."
-        Log.i(TAG, "GPU Detection: Built-in GPU reported as '$gpuName'.")
-        Log.i(TAG, "Initializing llama.cpp with GPU=$useGpu")
+        _status.value = "Loading model (CPU Only)..."
+        Log.i(TAG, "Initializing llama.cpp with HARDWARE_ACCEL=OFF (Stability Priority)")
         
         val ctx = llamaInit(modelPath, mmprojPath, useGpu)
         
