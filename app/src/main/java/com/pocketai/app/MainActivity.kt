@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
                                     val manifest = otaManifest
                                     otaManifest = null
                                     if (manifest != null) {
-                                        updateManager.downloadAndInstall(manifest.apkUrl, "pocketai-v${manifest.versionName}.apk")
+                                        updateManager.downloadAndInstall(manifest.updateUrl, "pocketai-v${manifest.versionName}.apk")
                                         val toastMsg = "Downloading update in background..."
                                         android.widget.Toast.makeText(this@MainActivity, toastMsg, android.widget.Toast.LENGTH_LONG).show()
                                     }

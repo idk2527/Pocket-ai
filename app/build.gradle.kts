@@ -22,7 +22,7 @@ android {
         applicationId = "com.pocketai.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 17
+        versionCode = 50
         versionName = "1.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -31,7 +31,7 @@ android {
         }
 
         buildConfigField("String", "LOGO_DEV_TOKEN", "\"${localProps.getProperty("LOGO_DEV_TOKEN", "")}\"")
-        buildConfigField("String", "FIREBASE_HOSTING_URL", "\"${localProps.getProperty("FIREBASE_HOSTING_URL", "https://pocket-ai-a51d5.web.app")}\"")
+        buildConfigField("String", "FIREBASE_HOSTING_URL", "\"https://pocket-ai-a51d5.web.app\"")
     }
 
     signingConfigs {

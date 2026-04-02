@@ -438,8 +438,8 @@ fun SettingsScreen(
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                if (updateInfo?.apkUrl != null) {
-                                    viewModel.startUpdate(updateInfo!!.apkUrl, updateInfo!!.versionName)
+                                if (updateInfo?.updateUrl != null) {
+                                    viewModel.startUpdate(updateInfo!!.updateUrl, updateInfo!!.versionName)
                                     scope.launch { snackbarHostState.showSnackbar("Downloading update...") }
                                 }
                                 viewModel.dismissUpdateDialog()

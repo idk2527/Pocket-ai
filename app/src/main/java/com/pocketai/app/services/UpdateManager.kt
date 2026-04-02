@@ -23,8 +23,7 @@ data class OtaManifest(
     val versionName: String,
     val versionCode: Int,
     val releaseNotes: String,
-    val apkUrl: String,
-    val minSdkVersion: Int
+    val updateUrl: String
 )
 
 @Singleton
@@ -101,13 +100,21 @@ class UpdateManager @Inject constructor(
     
     fun installApk(downloadId: Long) {
         val manager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val uri = manager.getUriForDownloadedFile(downloadId) ?: return
+        val uri = try {
+            manager.getUriForDownloadedFile(downloadId)
+        } catch (e: Exception) {
+            null
+        } ?: return
         
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(uri, "application/vnd.android.package-archive")
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         
-        context.startActivity(intent)
+        try {
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
