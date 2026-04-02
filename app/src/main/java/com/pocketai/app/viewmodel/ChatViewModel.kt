@@ -3,7 +3,7 @@ package com.pocketai.app.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pocketai.app.data.repository.ExpenseRepository
-import com.pocketai.app.services.LlamaCppService
+import com.pocketai.app.services.LiteRTService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ data class ChatMessage(val role: String, val content: String)
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository,
-    private val llamaCppService: LlamaCppService
+    private val liteRTService: LiteRTService
 ) : ViewModel() {
     
     // Initial system greeting
@@ -28,7 +28,7 @@ class ChatViewModel @Inject constructor(
     private val _isGenerating = MutableStateFlow(false)
     val isGenerating: StateFlow<Boolean> = _isGenerating.asStateFlow()
 
-    val llmStatus = llamaCppService.status
+    val llmStatus = liteRTService.status
     
     fun sendMessage(userText: String) {
         if (_isGenerating.value || userText.isBlank()) return
@@ -92,10 +92,10 @@ $mdTable<|im_end|>"""
             
             var accumulatedText = ""
             
-            val fullResponse = llamaCppService.generateResponse(
+            val fullResponse = liteRTService.generateResponseWithImage(
                 image = null,
                 prompt = prompt,
-                onTokenReceived = { token ->
+                onToken = { token ->
                     accumulatedText += token
                     // Update latest assistant message natively
                     val list = _messages.value.toMutableList()

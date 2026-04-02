@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
 import com.pocketai.app.data.model.Expense
 import com.pocketai.app.data.model.ExtractionSource
 import com.pocketai.app.data.model.ReceiptData
-import com.pocketai.app.services.LlamaCppService
+import com.pocketai.app.services.LiteRTService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class ReceiptPipeline @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val inferenceService: LlamaCppService
+    private val inferenceService: LiteRTService
 ) {
     private val TAG = "ReceiptPipeline"
     private val gson = Gson()
@@ -80,7 +80,10 @@ class ReceiptPipeline @Inject constructor(
             val prompt = buildExtractionPrompt()
             val jsonResponse = try {
                 kotlinx.coroutines.withTimeout(120_000) {
-                    inferenceService.generateResponse(bitmap, prompt) { token ->
+                    inferenceService.generateResponseWithImage(
+                        prompt = prompt,
+                        image = bitmap
+                    ) { token ->
                         _partialResult.value += token
                     }
                 }

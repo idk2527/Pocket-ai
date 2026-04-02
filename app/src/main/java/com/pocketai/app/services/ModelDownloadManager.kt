@@ -37,8 +37,7 @@ class ModelDownloadManager @Inject constructor(
         private val BASE_URL get() = "${com.pocketai.app.BuildConfig.FIREBASE_HOSTING_URL}/models/"
         
         val MODEL_FILES = listOf(
-            "Qwen3.5-0.8B-Q4_K_M.gguf" to 532_517_120L,
-            "mmproj-F16.gguf" to 204_987_232L
+            "Qwen3.5-0.8B-LiteRT.bin" to 682_517_120L
         )
     }
 
