@@ -16,13 +16,13 @@ interface ExpenseDao {
     suspend fun insertExpense(expense: Expense): Long
 
     @Update
-    suspend fun updateExpense(expense: Expense)
+    suspend fun updateExpense(expense: Expense): Int
 
     @Delete
-    suspend fun deleteExpense(expense: Expense)
+    suspend fun deleteExpense(expense: Expense): Int
 
     @Query("DELETE FROM expenses WHERE id = :id")
-    suspend fun deleteExpenseById(id: Long)
+    suspend fun deleteExpenseById(id: Long): Int
 
     @Query("SELECT * FROM expenses WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC, createdAt DESC")
     fun getExpensesByDateRange(startDate: String, endDate: String): Flow<List<Expense>>
@@ -60,7 +60,7 @@ interface ExpenseDao {
     suspend fun getTotalSpendingAllTime(): Double?
     
     @Query("DELETE FROM expenses")
-    suspend fun deleteAllExpenses()
+    suspend fun deleteAllExpenses(): Int
 }
 
 data class CategoryTotal(

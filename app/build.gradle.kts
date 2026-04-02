@@ -10,7 +10,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.dagger.hilt.android")
-    id("org.jetbrains.kotlin.kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -22,8 +22,8 @@ android {
         applicationId = "com.pocketai.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 16
-        versionName = "1.4.2"
+        versionCode = 17
+        versionName = "1.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -76,19 +76,9 @@ android {
         ndk {
             abiFilters.addAll(listOf("arm64-v8a"))
         }
-        externalNativeBuild {
-            cmake {
-                arguments("-DCMAKE_BUILD_TYPE=Release")
-            }
-        }
     }
 
-    externalNativeBuild {
-        cmake {
-            path("src/main/cpp/CMakeLists.txt")
-            version = "3.22.1"
-        }
-    }
+
 
     // Disable compression for large model files
     androidResources {
@@ -134,10 +124,10 @@ dependencies {
     // Coil for image loading
     implementation("io.coil-kt:coil-compose:2.5.0")
 
-    // Room database (KAPT)
-    implementation("androidx.room:room-runtime:2.7.0")
-    implementation("androidx.room:room-ktx:2.7.0")
-    kapt("androidx.room:room-compiler:2.7.0")
+    // Room database (KSP required for 2.7.0+)
+    implementation("androidx.room:room-runtime:2.7.0-alpha01")
+    implementation("androidx.room:room-ktx:2.7.0-alpha01")
+    ksp("androidx.room:room-compiler:2.7.0-alpha01")
     
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
@@ -146,9 +136,9 @@ dependencies {
     // Data Store (for preferences)
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-    // Hilt (KAPT)
-    implementation("com.google.dagger:hilt-android:2.54")
-    kapt("com.google.dagger:hilt-android-compiler:2.54")
+    // Hilt (KSP)
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // GGUF LLM Inference - RealGGUFInference (simulated)
@@ -157,6 +147,9 @@ dependencies {
     // ML Kit Document Scanner (edge detection + auto-crop)
     implementation("com.google.android.gms:play-services-mlkit-document-scanner:16.0.0-beta1")
     
+    // Google LiteRT-LM (New AI Engine)
+    implementation("com.google.ai.edge.litertlm:litertlm-android:0.9.0")
+
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
     

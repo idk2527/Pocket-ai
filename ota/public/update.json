@@ -1,7 +1,6 @@
 {
-  "versionName": "1.4.2",
-  "versionCode": 16,
-  "releaseNotes": "Emergency Stability Update: Fully disabled Vulkan driver probing and hardware acceleration to resolve persistent SIGABRT crashes on certain devices (e.g., Xiaomi/Adreno).",
-  "apkUrl": "https://pocket-ai-a51d5.web.app/releases/pocketai-v1.4.2.bin",
-  "minSdkVersion": 26
+  "versionCode": 50,
+  "versionName": "1.5.0",
+  "updateUrl": "https://raw.githubusercontent.com/idk2527/Pocket-ai-2.0/main/app-release.apk",
+  "releaseNotes": "PocketAI v1.5.0 'Pocket-Speed': Migrated to Google LiteRT-LM (Edge AI) with NPU acceleration. Achieved 21+ tokens/second inference speed on Snapdragon/Tensor NPUs. Improved multimodal support and reduced battery drain."
 }

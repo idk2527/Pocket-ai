@@ -3,7 +3,7 @@ package com.pocketai.app.di
 import android.content.Context
 import com.pocketai.app.data.database.AppDatabase
 import com.pocketai.app.data.repository.ExpenseRepository
-import com.pocketai.app.services.LlamaCppService
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,10 +32,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLlamaCppService(
+    fun provideLiteRTService(
         @ApplicationContext context: Context
-    ): LlamaCppService {
-        return LlamaCppService(context)
+    ): com.pocketai.app.services.LiteRTService {
+        return com.pocketai.app.services.LiteRTService(context)
     }
     
     // ReceiptPipeline is now @Inject constructor, no manual provision needed

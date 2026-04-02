@@ -18,7 +18,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import com.pocketai.app.ui.theme.PocketAITheme
 import com.pocketai.app.presentation.navigation.AppNavigation
 import kotlinx.coroutines.launch
-import com.pocketai.app.services.LlamaCppService
+import androidx.lifecycle.lifecycleScope
+import com.pocketai.app.services.LiteRTService
 import com.pocketai.app.services.ModelDownloadManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
     lateinit var preferencesManager: com.pocketai.app.data.preferences.PreferencesManager
 
     @Inject
-    lateinit var llamaCppService: LlamaCppService
+    lateinit var liteRTService: LiteRTService
 
     @Inject
     lateinit var modelDownloadManager: ModelDownloadManager
@@ -41,9 +42,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Pre-warm the Qwen model only if already downloaded
+        // Pre-warm the Qwen LiteRT model (NPU Burst Mode) only if already downloaded
         if (modelDownloadManager.areModelsDownloaded()) {
-            llamaCppService.prewarm()
+            val modelFile = java.io.File(filesDir, "Qwen3.5-0.8B-LiteRT.bin")
+            if (modelFile.exists()) {
+                lifecycleScope.launch {
+                    liteRTService.initialize(modelFile.absolutePath)
+                }
+            }
         }
 
         setContent {
