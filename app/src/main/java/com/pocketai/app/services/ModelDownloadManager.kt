@@ -34,10 +34,10 @@ class ModelDownloadManager @Inject constructor(
     val progress: StateFlow<DownloadProgress> = _progress.asStateFlow()
 
     companion object {
-        private const val MODEL_URL = "https://huggingface.co/litert-community/Qwen3.5-0.8B-LiteRT/resolve/main/Qwen3.5-0.8B-LiteRT.bin"
+        private const val MODEL_URL = "https://huggingface.co/litert-community/Qwen3.5-0.8B-LiteRT/resolve/main/model_multimodal.litertlm"
         
         val MODEL_FILES = listOf(
-            "Qwen3.5-0.8B-LiteRT.bin" to 682_517_120L
+            "model_multimodal.litertlm" to 1_245_541_376L
         )
     }
 

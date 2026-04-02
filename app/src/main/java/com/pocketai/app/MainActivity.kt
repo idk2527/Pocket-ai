@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
 
         // Pre-warm the Qwen LiteRT model (NPU Burst Mode) only if already downloaded
         if (modelDownloadManager.areModelsDownloaded()) {
-            val modelFile = java.io.File(filesDir, "Qwen3.5-0.8B-LiteRT.bin")
+            val modelFile = java.io.File(filesDir, "model_multimodal.litertlm")
             if (modelFile.exists()) {
                 lifecycleScope.launch {
                     liteRTService.initialize(modelFile.absolutePath)
