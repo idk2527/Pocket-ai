@@ -34,7 +34,7 @@ class ModelDownloadManager @Inject constructor(
     val progress: StateFlow<DownloadProgress> = _progress.asStateFlow()
 
     companion object {
-        private val BASE_URL get() = "${com.pocketai.app.BuildConfig.FIREBASE_HOSTING_URL}/models/"
+        private const val MODEL_URL = "https://huggingface.co/litert-community/Qwen3.5-0.8B-LiteRT/resolve/main/Qwen3.5-0.8B-LiteRT.bin"
         
         val MODEL_FILES = listOf(
             "Qwen3.5-0.8B-LiteRT.bin" to 682_517_120L
@@ -74,7 +74,7 @@ class ModelDownloadManager @Inject constructor(
                     totalFiles = MODEL_FILES.size
                 )
 
-                val url = URL("$BASE_URL$filename")
+                val url = URL(MODEL_URL)
                 val connection = url.openConnection() as HttpURLConnection
                 connection.connectTimeout = 30_000
                 connection.readTimeout = 30_000
