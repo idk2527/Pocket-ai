@@ -43,23 +43,37 @@ class LiteRTService @Inject constructor(
             val cacheDir = File(context.cacheDir, "litert_aot_cache")
             if (!cacheDir.exists()) cacheDir.mkdirs()
 
-            val config = EngineConfig(
+            var config = EngineConfig(
                 modelPath = modelPath,
                 backend = Backend.NPU(),
                 maxNumTokens = 2048,
                 cacheDir = cacheDir.absolutePath
             )
 
-            engine = Engine(config)
+            try {
+                engine = Engine(config)
+            } catch (e: Exception) {
+                Log.w(TAG, "NPU Initialization failed, falling back to CPU. Reason: ${e.message}")
+                // Fallback to CPU if NPU is unsupported on this device
+                config = EngineConfig(
+                    modelPath = modelPath,
+                    backend = Backend.CPU(),
+                    maxNumTokens = 2048,
+                    cacheDir = cacheDir.absolutePath
+                )
+                engine = Engine(config)
+            }
+            
             activeConversation = engine?.createConversation(com.google.ai.edge.litertlm.ConversationConfig())
             
             _isLoaded.value = true
-            _status.value = "LiteRT-LM Ready (NPU Active)"
+            _status.value = "LiteRT-LM Ready (Fallback/Active)"
             Log.i(TAG, "LiteRT-LM Engine loaded successfully.")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize LiteRT-LM", e)
+            Log.e(TAG, "Failed to initialize LiteRT-LM completely", e)
             _status.value = "Error: ${e.message}"
             _isLoaded.value = false
+            throw e // Rethrow so ensureLoaded fails properly
         }
     }
 
@@ -88,10 +102,10 @@ class LiteRTService @Inject constructor(
         try {
             ensureLoaded()
         } catch (e: Exception) {
-            return@withContext "Error: ${e.message}"
+            throw Exception("Model initialization failed: ${e.message}", e)
         }
         
-        val session = activeConversation ?: return@withContext "Error: Session not active"
+        val session = activeConversation ?: throw IllegalStateException("Session not active even after ensureLoaded")
 
         try {
             val parts = mutableListOf<Content>()
