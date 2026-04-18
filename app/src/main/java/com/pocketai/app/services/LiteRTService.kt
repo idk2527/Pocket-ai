@@ -64,6 +64,20 @@ class LiteRTService @Inject constructor(
     }
 
     /**
+     * Ensures the model is loaded before any inference.
+     */
+    private suspend fun ensureLoaded() {
+        if (engine != null && activeConversation != null) return
+        
+        val modelFile = File(context.filesDir, "model_multimodal.litertlm")
+        if (modelFile.exists()) {
+            initialize(modelFile.absolutePath)
+        } else {
+            throw IllegalStateException("Model not found. Please download it first.")
+        }
+    }
+
+    /**
      * Runs multimodal inference (Image + Text) using the correct 1.0 SDK API.
      */
     suspend fun generateResponseWithImage(
@@ -71,6 +85,12 @@ class LiteRTService @Inject constructor(
         image: Bitmap? = null,
         onToken: (String) -> Unit
     ): String = withContext(Dispatchers.Default) {
+        try {
+            ensureLoaded()
+        } catch (e: Exception) {
+            return@withContext "Error: ${e.message}"
+        }
+        
         val session = activeConversation ?: return@withContext "Error: Session not active"
 
         try {

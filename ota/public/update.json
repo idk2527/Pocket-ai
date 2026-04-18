@@ -1,6 +1,6 @@
 {
-  "versionCode": 52,
-  "versionName": "1.5.2",
-  "updateUrl": "https://github.com/idk2527/Pocket-ai-2.0/releases/download/v1.5.2/PocketAI_v1.5.2_Release.apk",
-  "releaseNotes": "PocketAI v1.5.2 'Pocket-Speed' (Final Fix): Corrected model filename to 'model_multimodal.litertlm' and verified Hugging Face download link. Local 21+ tokens/second AI is now fully operational."
+  "versionCode": 53,
+  "versionName": "1.5.3",
+  "updateUrl": "https://github.com/idk2527/Pocket-ai-2.0/releases/download/v1.5.3/PocketAI_v1.5.3_Release.apk",
+  "releaseNotes": "PocketAI v1.5.3 'Pocket-Speed' (Stabilization): Fixed R8/Gson 'Abstract class' crash during receipt scanning and added lazy-initialization to prevent 'Session not active' errors. High-performance 21+ tokens/second AI is now fully operational."
 }

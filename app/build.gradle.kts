@@ -22,8 +22,8 @@ android {
         applicationId = "com.pocketai.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 50
-        versionName = "1.5.0"
+        versionCode = 53
+        versionName = "1.5.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

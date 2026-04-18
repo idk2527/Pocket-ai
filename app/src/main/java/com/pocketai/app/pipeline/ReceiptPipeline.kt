@@ -7,9 +7,11 @@ import android.net.Uri
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import com.pocketai.app.data.model.ReceiptData
+import com.pocketai.app.data.model.VlmResponse
+import com.pocketai.app.data.model.VlmItem
 import com.pocketai.app.data.model.Expense
 import com.pocketai.app.data.model.ExtractionSource
-import com.pocketai.app.data.model.ReceiptData
 import com.pocketai.app.services.LiteRTService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -222,8 +224,14 @@ Use this exact JSON structure:
      */
     private fun parseVlmJson(json: String): ReceiptData {
         var cleanJson = json.replace("```json", "").replace("```", "").trim()
+        
+        // Handle markdown block cleanup or leading/trailing text more robustly
         if (cleanJson.contains("{")) {
-            cleanJson = cleanJson.substring(cleanJson.indexOf("{"), cleanJson.lastIndexOf("}") + 1)
+            val start = cleanJson.indexOf("{")
+            val end = cleanJson.lastIndexOf("}")
+            if (end > start) {
+                cleanJson = cleanJson.substring(start, end + 1)
+            }
         }
 
         try {
@@ -249,7 +257,7 @@ Use this exact JSON structure:
                 listOf(ReceiptData.PaymentInfo(method = raw.payment, amount = raw.total ?: 0.0))
             } else emptyList()
 
-            return ReceiptData(
+            val receiptData = ReceiptData(
                 storeName = raw.vendor ?: "Unknown",
                 date = raw.date ?: "",
                 totalAmount = raw.total ?: 0.0,
@@ -268,6 +276,8 @@ Use this exact JSON structure:
                 payments = payments,
                 rawJson = cleanJson
             )
+            _lastRawJson = cleanJson
+            return receiptData
         } catch (e: Exception) {
             Log.e(TAG, "JSON Parse Error: $cleanJson", e)
             throw Exception("JSON Parse Error: ${e.message}")
@@ -278,22 +288,6 @@ Use this exact JSON structure:
         _state.value = PipelineState.Idle
         _lastRawJson = null
     }
-
-    // --- VLM Response data classes (Lite Mode) ---
-
-    private data class VlmResponse(
-        val vendor: String?,
-        val date: String?,
-        val total: Double?,
-        val payment: String?, // Simple string in Lite mode
-        val items: List<VlmItem?>?
-    )
-
-    private data class VlmItem(
-        val n: String?, // name
-        val p: Double?, // price
-        val num: String?  // product number / id
-    )
 }
 
 sealed class PipelineState {
