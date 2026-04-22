@@ -1,6 +1,6 @@
 {
-  "versionCode": 54,
-  "versionName": "1.5.4",
-  "updateUrl": "https://github.com/idk2527/Pocket-ai-2.0/releases/download/v1.5.4/PocketAI_v1.5.4_Release.apk",
-  "releaseNotes": "PocketAI v1.5.4 (Hardware Fallback): Added automatic fallback to CPU processing if the device lacks a dedicated LiteRT NPU. Solves 'Session not active' crashes during scanning."
+  "versionCode": 55,
+  "versionName": "1.5.5",
+  "updateUrl": "https://github.com/idk2527/Pocket-ai-2.0/releases/download/v1.5.5/PocketAI_v1.5.5_Release.apk",
+  "releaseNotes": "PocketAI v1.5.5 (Safe Boot Fix): Fixed an issue where corrupted or partially downloaded models caused the app to crash on launch. The app will now automatically detect corrupt models, delete them, and cleanly re-download."
 }

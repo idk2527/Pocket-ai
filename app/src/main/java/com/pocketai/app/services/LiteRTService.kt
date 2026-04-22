@@ -73,7 +73,6 @@ class LiteRTService @Inject constructor(
             Log.e(TAG, "Failed to initialize LiteRT-LM completely", e)
             _status.value = "Error: ${e.message}"
             _isLoaded.value = false
-            throw e // Rethrow so ensureLoaded fails properly
         }
     }
 

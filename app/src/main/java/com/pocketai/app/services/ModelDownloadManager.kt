@@ -37,14 +37,19 @@ class ModelDownloadManager @Inject constructor(
         private const val MODEL_URL = "https://huggingface.co/litert-community/Qwen3.5-0.8B-LiteRT/resolve/main/model_multimodal.litertlm"
         
         val MODEL_FILES = listOf(
-            "model_multimodal.litertlm" to 1_245_541_376L
+            "model_multimodal.litertlm" to 1155923968L
         )
     }
 
     fun areModelsDownloaded(): Boolean {
-        return MODEL_FILES.all { (name, _) ->
+        return MODEL_FILES.all { (name, expectedSize) ->
             val file = File(context.filesDir, name)
-            file.exists() && file.length() > 0
+            if (file.exists() && file.length() == expectedSize) {
+                true
+            } else {
+                if (file.exists()) file.delete() // Delete corrupt or partial downloads
+                false
+            }
         }
     }
 
@@ -53,8 +58,8 @@ class ModelDownloadManager @Inject constructor(
             MODEL_FILES.forEachIndexed { index, (filename, expectedSize) ->
                 val destFile = File(context.filesDir, filename)
                 
-                if (destFile.exists() && destFile.length() > 0) {
-                    Log.i(TAG, "$filename already exists, skipping")
+                if (destFile.exists() && destFile.length() == expectedSize) {
+                    Log.i(TAG, "$filename already exists and verified, skipping")
                     _progress.value = DownloadProgress(
                         currentFile = filename,
                         bytesDownloaded = destFile.length(),
@@ -64,6 +69,7 @@ class ModelDownloadManager @Inject constructor(
                     )
                     return@forEachIndexed
                 }
+                if (destFile.exists()) destFile.delete()
 
                 Log.i(TAG, "Downloading $filename...")
                 _progress.value = DownloadProgress(
