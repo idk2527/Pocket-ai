@@ -52,6 +52,7 @@ class LiteRTService @Inject constructor(
 
             try {
                 engine = Engine(config)
+                engine?.initialize()
             } catch (e: Exception) {
                 Log.w(TAG, "NPU Initialization failed, falling back to CPU. Reason: ${e.message}")
                 // Fallback to CPU if NPU is unsupported on this device
@@ -62,6 +63,7 @@ class LiteRTService @Inject constructor(
                     cacheDir = cacheDir.absolutePath
                 )
                 engine = Engine(config)
+                engine?.initialize()
             }
             
             activeConversation = engine?.createConversation(com.google.ai.edge.litertlm.ConversationConfig())
