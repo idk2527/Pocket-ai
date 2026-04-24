@@ -106,7 +106,7 @@ class LiteRTService @Inject constructor(
             throw Exception("Model initialization failed: ${e.message}", e)
         }
         
-        val session = activeConversation ?: throw IllegalStateException("Session not active even after ensureLoaded")
+        val session = activeConversation ?: throw IllegalStateException("Session not active. Status: ${_status.value}")
 
         try {
             val parts = mutableListOf<Content>()
