@@ -1,6 +1,6 @@
 {
-  "versionCode": 56,
-  "versionName": "1.5.6",
-  "updateUrl": "https://github.com/idk2527/Pocket-ai-2.0/releases/download/v1.5.6/PocketAI_v1.5.6_Release.apk",
-  "releaseNotes": "PocketAI v1.5.6 (LiteRT Init Fix): Added the missing native initialization sequence required by the Google Edge AI SDK. The AI model will now correctly load into memory and start processing receipts and chats instantly."
+  "versionCode": 57,
+  "versionName": "1.5.7",
+  "updateUrl": "https://github.com/idk2527/Pocket-ai-2.0/releases/download/v1.5.7/PocketAI_v1.5.7_Release.apk",
+  "releaseNotes": "PocketAI v1.5.7 (Debug Build): Advanced error tracking."
 }
